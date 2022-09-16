@@ -1,3 +1,5 @@
+import { doc } from "prettier";
+
 class MyComment extends HTMLElement {
     constructor() {
         super();
@@ -26,6 +28,7 @@ class MyComment extends HTMLElement {
     <div class="column right" style="background-color:#74C3E1;">
         <h2>Comments</h2>
         <p>
+        <img id="photo" />
             <ul id="todos"></ul>
         </p>
     </div>
@@ -36,8 +39,9 @@ class MyComment extends HTMLElement {
 
     <!--         <input type="submit" value="Add Todo"> -->
 
-    Name: <input name="name" type="text"><br> Email: <input name="email" type="text"><br> Comment:
-    <input name="todo" type="text"><br>
+    Photo: <input name="photo" type="text" placeholder=" enter url"><br> Name: <input name="name" type="text"><br> Email: <input name="email" type="text"><br> Comment:
+    
+    <textarea id="todo" name ="todo" style="width: 251px; height: 54px;"> ..comment </textarea>
     <!-- <input type="submit" value="Add Comment"> -->
     <button id="submit" onclick="submitAllComments()">Submit</button>
     <button id="clear-all" onclick="clearAllComments()">Clear All</button>
@@ -59,10 +63,12 @@ const form = document.querySelector('form');
 const input = document.querySelector("[name='todo']");
 const inputEmail = document.querySelector("[name='email']");
 const inputName = document.querySelector("[name='name']");
+const inputPhoto = document.querySelector("[name ='photo']")
 
 const todoList = document.getElementById('todos');
 const emailList = document.getElementById('todos');
 const nameList = document.getElementById('todos');
+const photoList = document.getElementById('photo');
 // const emailList = document.getElementById('emails');
 // const nameList = document.getElementById('names');
 
@@ -71,21 +77,31 @@ const nameList = document.getElementById('todos');
 const existingTodos = JSON.parse(localStorage.getItem('todos')) || [];
 const existingEmails = JSON.parse(localStorage.getItem('emails')) || [];
 const existingNames = JSON.parse(localStorage.getItem('names')) || [];
+const existingPhotos = JSON.parse(localStorage.getItem('photos')) || [];
+
 const todoData = [];
 const emailData = [];
 const nameData = [];
+const photoData = [];
 
-existingTodos.forEach(todo => {
-    addTodo(todo);
+
+existingNames.forEach(name => {
+    addName(name);
 });
 
 existingEmails.forEach(email => {
     addEmail(email);
 });
 
-existingNames.forEach(name => {
-    addName(name);
+existingTodos.forEach(todo => {
+    addTodo(todo);
 });
+
+existingPhotos.forEach(photo => {
+    addPhoto(photo);
+});
+
+
 
 function addTodo(todoText) {
     todoData.push(todoText);
@@ -116,12 +132,24 @@ function addName(nameText) {
 
 }
 
+function addPhoto(photoText) {
+    nameData.push(photoText);
+    const li = document.createElement('li')
+    li.innerHTML = photoText;
+    photoList.appendChild(li);
+    localStorage.setItem('photos', JSON.stringify(photoText));
+    inputPhoto.value = ''
+
+}
+
 // Events
 form.onsubmit = (event) => {
     event.preventDefault();
-    addTodo(input.value);
-    addEmail(inputEmail.value);
+    addPhoto(inputPhoto.value);
     addName(inputName.value);
+    addEmail(inputEmail.value);
+    addTodo(input.value);
+
 }
 
 
@@ -134,6 +162,7 @@ function clearAllComments() {
     todoList.innerHTML = "";
     emailList.innerHTML = "";
     nameList.innerHTML = "";
+    li.innerHTML = "";
     // todoList.document.getElementById.clear('todos');
 
     window.localStorage.clear();
